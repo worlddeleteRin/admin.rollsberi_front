@@ -1,8 +1,5 @@
 <template>
-
-	<div class="flex"
-		v-if="is_authorized"
-	>
+	<div class="flex">
 
 	<NavSidebar
 	/>
@@ -20,11 +17,6 @@
 	</div>
 
 	</div>
-
-	<div>
-		user is not authorized as admin
-	</div>
-
 </template>
 
 <script>
