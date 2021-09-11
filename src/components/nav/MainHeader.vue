@@ -15,7 +15,7 @@
 				class="text-def_btn_text"
 			/>
 			<div class="ml-1 text-def_btn_text">
-				user name	
+				{{ adminUser.name }}	
 			</div>
 		</div>
 	</div>
@@ -33,6 +33,12 @@ export default defineComponent({
 	name: "MainHeader",
 	components: {
 		Icon,
+	},
+	props: {
+		adminUser: {
+			type: Object,
+			default: null,
+		}
 	},
 	setup () {
 		

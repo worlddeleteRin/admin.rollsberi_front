@@ -6,7 +6,7 @@ import {
 const state = {
 	is_authorized: false,
 	access_token: null,
-	admin_user: null,
+	user_info: null,
 }
 const mutations = {
 	setUserAuthorized(state: Record<string,any>, is_authorized: boolean) {
@@ -16,7 +16,7 @@ const mutations = {
 		state.access_token = access_token 
 	},
 	setUserInfo(state: Record<string,any>, user_info: Record<string,any>) {
-		state.admin_user = user_info
+		state.user_info = user_info
 	},
 }
 const getters = {
@@ -35,8 +35,8 @@ const actions = {
 		console.log('resp data is', resp_data)
 		if (resp_data) {
 			context.commit('setUserAuthorized', true)
-			context.commit('setUserInfo', resp_data.data)
-		console.log('user is', resp_data.data)
+			context.commit('setUserInfo', resp_data.user_data)
+		console.log('user is', resp_data.user_data)
 		} else {
 			console.log('token is no longer valid')
 			// if token is no longer valid, remove saved access token and make user not authorized
@@ -47,21 +47,14 @@ const actions = {
 		}
 	},
 	async loginAdminAPI(
-		context: ActionContext<any,any>, login_info: Record<string,any>
+		context: ActionContext<any,any>
 	) {
-		console.log('run action, login info is', login_info)
+		const username = ""
+		const password = ""
 		const resp_data: Record<string,any> = await AuthDataService.loginAdmin(
-			login_info.username, login_info.password	
+			username, password	
 		)
-		if (resp_data) {
-			if (resp_data.status == 200 && resp_data.data.access_token) {
-				const token = resp_data.data.access_token
-				context.commit('setUserAccessToken', token)
-				localStorage.setItem("user_access_token", token)
-				return true
-			}
-		}
-		return false
+		console.log('resp data is', resp_data, context)
 	}
 }
 
