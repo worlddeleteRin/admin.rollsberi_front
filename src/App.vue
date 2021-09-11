@@ -1,30 +1,34 @@
 <template>
-  <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </div>
-  <router-view />
+	<div class="flex">
+
+	<NavSidebar
+	/>
+
+	<div class="flex flex-col w-full h-full">
+
+	<MainHeader
+	/>
+
+	main app is here
+
+	<router-view>
+	</router-view>
+
+	</div>
+
+	</div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+import { defineComponent } from 'vue';
+import NavSidebar from '@/components/nav/NavSidebar.vue';
+import MainHeader from '@/components/nav/MainHeader.vue';
 
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+export default defineComponent({
+	name: "App",
+	components: {
+		NavSidebar,
+		MainHeader,
+	}
+});
+</script>
