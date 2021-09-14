@@ -4,10 +4,33 @@
 >
 
 	<el-table
+		:data="orders"
 	>
 		<el-table-column label="Дата">
-			<template #default="">
-				asdfadsf
+			<template #default="scope">
+				{{ scope.row.date_created }}
+			</template>
+		</el-table-column>
+		<el-table-column label="Статус">
+			<template #default="scope">
+				<div
+					class="px-3 py-1 text-white rounded-lg max-w-max"
+					:style="'background-color: ' + scope.row.status.color"
+				>
+					{{ scope.row.status.name_display }}
+				</div>
+			</template>
+		</el-table-column>
+		<el-table-column label="Сумма">
+			<template #default="scope">
+				<div class="text-xl tracking-wider text-black">
+				{{ scope.row.total_amount }} &#8381; 
+				</div>
+			</template>
+		</el-table-column>
+		<el-table-column label="Клиент">
+			<template #default="scope">
+				{{ scope.row.customer_id }}
 			</template>
 		</el-table-column>
 	</el-table>
@@ -29,7 +52,7 @@ import { useStore } from 'vuex';
 export default defineComponent({
 	name: "OrdersPage",
 	setup () {
-		const orders_loaded: boolean = ref(false)
+		const orders_loaded = ref(false)
 		const store = useStore()
 		// computed
 		const orders = computed(() => store.state.orders.orders);
