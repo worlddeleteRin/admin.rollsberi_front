@@ -17,6 +17,7 @@
 	/>
 
 	main app is here
+	{{ access_token }}
 
 	<router-view>
 	</router-view>
@@ -61,6 +62,7 @@ export default defineComponent({
 		// ref
 		const initial_loaded = ref(false)
 		// computed
+		const access_token = computed(() => store.state.authorization.access_token);
 		const admin_user = computed(() => store.state.authorization.admin_user);
 		const is_authorized = computed(() => store.state.authorization.is_authorized);
 		// functions
@@ -81,6 +83,7 @@ export default defineComponent({
 			// ref
 			initial_loaded,
 			// computed
+			access_token,
 			admin_user,
 			is_authorized,
 			// functions
