@@ -19,8 +19,10 @@
 	main app is here
 	{{ access_token }}
 
-	<router-view>
-	</router-view>
+	<div class="px-4 my-5">
+		<router-view>
+		</router-view>
+	</div>
 
 	</div>
 

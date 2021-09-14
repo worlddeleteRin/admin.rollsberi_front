@@ -5,7 +5,15 @@
 
 	<el-table
 		:data="orders"
+		@row-click="goOrderPage"
 	>
+		<el-table-column label="Клиент">
+			<template #default="scope">
+				<div class="tracking-wide text-black text-md">
+					{{ scope.row.customer_username }}
+				</div>
+			</template>
+		</el-table-column>
 		<el-table-column label="Дата">
 			<template #default="scope">
 				{{ scope.row.date_created }}
@@ -28,13 +36,23 @@
 				</div>
 			</template>
 		</el-table-column>
-		<el-table-column label="Клиент">
-			<template #default="scope">
-				{{ scope.row.customer_id }}
-			</template>
-		</el-table-column>
+
 	</el-table>
-	{{ orders }}
+
+	<!-- new order button -->
+	<el-button
+		@click="goCreateOrderPage"
+		:circle="true"
+		type="primary"
+		size="small"
+		class="fixed bottom-10 right-10"
+	>
+		<Icon
+			icon="akar-icons:plus"
+			width="30"
+		/>
+	</el-button>
+	<!-- eof new order button -->
 
 </div>
 
@@ -48,12 +66,14 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, computed, ref } from 'vue';
 import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
 	name: "OrdersPage",
 	setup () {
 		const orders_loaded = ref(false)
 		const store = useStore()
+		const router = useRouter()
 		// computed
 		const orders = computed(() => store.state.orders.orders);
 		// functions
@@ -65,13 +85,23 @@ export default defineComponent({
 			// no orders, need load them
 			await store.dispatch('orders/getOrdersAPI')
 			orders_loaded.value = true
-			return
+			return 
 		});
+		const goOrderPage = (order: Record<string,any>) => {
+			router.push('/orders/' + order.id)
+		}
+		const goCreateOrderPage = () => {
+			router.push('/orders/new-order')
+		}
+
 		return {
 			// ref
 			orders_loaded,
 			// computed
 			orders,
+			// functions
+			goOrderPage,
+			goCreateOrderPage,
 		}
 	}
 });
