@@ -53,18 +53,22 @@ class CartDataServiceClass {
 	}
 	// order section
 	// create order
-	async createOrder(line_items: Array<Record<string,any>>, user_access_token: string, customer_session_id: string | null, checkout_info: Record<string,any>): Promise<any> {
+	async createOrderAdmin(line_items: Array<Record<string,any>>, user_access_token: string, session_id: string | null, checkout_info: Record<string,any>): Promise<any> {
 		const delivery_address = checkout_info.delivery_address == null ? null: checkout_info.delivery_address.id
 		const pickup_address = checkout_info.pickup_address == null ? null: checkout_info.pickup_address.id
+		const customer_id = checkout_info.authorized_user == null ? null: checkout_info.authorized_user.id
 		const response: Record<string,any> = await apiClient.post(
-		"orders/",
+		"orders/admin",
 		{
-			"customer_session_id": customer_session_id,
+			"customer_id": customer_id,
+			"customer_session_id": session_id,
 			"line_items": line_items,
 			"delivery_method": checkout_info.delivery_method,
-			"payment_method": checkout_info.payment_method.id,
+			"payment_method": checkout_info.payment_method,
 			"delivery_address": delivery_address,
 			"pickup_address": pickup_address,
+			"guest_delivery_address": checkout_info.guest_delivery_address,
+			"guest_phone_number": checkout_info.guest_phone_number_raw,
 		},
 		{
 			headers: {

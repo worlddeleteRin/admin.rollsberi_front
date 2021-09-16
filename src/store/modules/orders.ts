@@ -20,7 +20,7 @@ const getters = {
 }
 const actions = {
 	async getOrdersAPI(
-	context: ActionContext<any,any>, options: Record<string,any>
+	context: ActionContext<any,any>, options: Record<string,any> = {}
 	) {
 		const access_token = context.rootState.authorization.access_token
 		const resp_data: Record<string,any> = await OrdersDataService.getOrders(access_token, options)
@@ -36,6 +36,15 @@ const actions = {
 		if (!resp_data) { return false; }
 		if (!(resp_data.status == 200)) { return false; }
 		context.commit('setCurrentOrder', resp_data.data.order)
+	},
+	async deleteOrderAPI(
+		context: ActionContext<any,any>, order_id: string
+	) {
+		const access_token = context.rootState.authorization.access_token
+		const resp_data: Record<string,any> = await OrdersDataService.deleteOrder(access_token, order_id)
+		if (!resp_data) { return false; }
+		if (!(resp_data.status == 200)) { return false; }
+		await context.dispatch('getOrdersAPI')
 	}
 }
 

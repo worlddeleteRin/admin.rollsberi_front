@@ -8,12 +8,26 @@
 
 	<el-table
 		:data="orders"
-		@row-click="goOrderPage"
 	>
 		<el-table-column label="Клиент">
 			<template #default="scope">
-				<div class="tracking-wide text-black text-md">
+				<div 
+				class="flex items-center tracking-wide text-black text-md"
+					v-if="scope.row.customer_id"
+				>
+					<div class="p-2 mr-2 bg-green-400 rounded-full">
+						<Icon icon="bx:bxs-user" class="text-white"/>
+					</div>
 					{{ scope.row.customer_username }}
+				</div>
+				<div
+					class="flex items-center tracking-wide text-black text-md"
+					v-else
+				>
+					<div class="p-2 mr-2 bg-blue-400 rounded-full">
+						<Icon icon="bx:bxs-user" class="text-white"/>
+					</div>
+					{{ scope.row.guest_phone_number }}
 				</div>
 			</template>
 		</el-table-column>
@@ -36,6 +50,26 @@
 			<template #default="scope">
 				<div class="text-xl tracking-wider text-black">
 				{{ scope.row.total_amount }} &#8381; 
+				</div>
+			</template>
+		</el-table-column>
+		<el-table-column label="Действия">
+			<template #default="scope">
+				<div class="">
+					<el-button
+						type="primary"
+						size="small"
+						@click="goOrderPage(scope.row)"
+					>
+						<Icon icon="akar-icons:edit" width="20" />
+					</el-button>
+					<el-button
+						type="danger"
+						size="small"
+						@click="deleteOrder(scope.row)"
+					>
+						<Icon icon="akar-icons:edit" width="20" />
+					</el-button>
 				</div>
 			</template>
 		</el-table-column>
@@ -91,10 +125,15 @@ export default defineComponent({
 			return 
 		});
 		const goOrderPage = (order: Record<string,any>) => {
+			console.log('order is', order)
 			router.push('/orders/' + order.id)
 		}
 		const goCreateOrderPage = () => {
 			router.push('/orders/new-order')
+		}
+		const deleteOrder = async (order: Record<string,any>) => {
+			const is_deleted = await store.dispatch('orders/deleteOrderAPI', order.id)
+			// success message, if deleted, error if not
 		}
 
 		return {

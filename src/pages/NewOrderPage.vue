@@ -9,15 +9,15 @@
 	v-if="info_loaded"
 >
 	{{ checkout_common_info }}
-	{{ guest_phone_number_raw }}
 	session id is {{ session_id }}
+	{{ new_order_info }}
 
 	<!-- chooise order taget -->
 	<stage-title title="Выберите, для кого создается заказ" 
 	/>
 
 	<el-select
-		v-model="order_target"
+		v-model="new_order_info.order_target"
 		placeholder="Новый заказ для..."
 	>
 		<el-option
@@ -34,7 +34,7 @@
 	<div>
 	<stage-title title="Выберите способ доставки"/>
 		<el-select
-			v-model="delivery_method"
+			v-model="new_order_info.delivery_method"
 			placeholder="Выберите способ доставки"
 		>
 			<el-option
@@ -52,7 +52,7 @@
 	<div>
 	<stage-title title="Выберите способ оплаты"/>
 		<el-select
-			v-model="payment_method"
+			v-model="new_order_info.payment_method"
 			placeholder="Выберите способ оплаты"
 		>
 			<el-option
@@ -67,10 +67,10 @@
 	<!-- eof choose payment method -->
 
 	<!-- choose pickup address -->
-	<div v-if="delivery_method == 'pickup'">
+	<div v-if="new_order_info.delivery_method == 'pickup'">
 	<stage-title title="Выберите пункт выдачи заказа"/>
 		<el-select
-			v-model="pickup_address"
+			v-model="new_order_info.pickup_address"
 			placeholder="Выберите пункт выдачи заказа"
 		>
 			<el-option
@@ -85,12 +85,12 @@
 	<!-- eof choose pickup address -->
 
 	<!-- guest user phone -->
-	<div v-if="order_target == 'guest_user'">
+	<div v-if="new_order_info.order_target == 'guest_user'">
 	<!-- need to add v-mask -->
 		<stage-title title="Введите номер телефона клиента"/>
 		<el-input
 			placeholder="Номер телефона клиента"
-			v-model="guest_phone_number"
+			v-model="new_order_info.guest_phone_number"
 			v-maska="phone_mask"
 			@maska="setGuestUserPhone"
 		>
@@ -99,11 +99,11 @@
 	<!-- eof guest user phone -->
 
 	<!-- guest delivery address -->
-	<div v-if="order_target == 'guest_user' && delivery_method == 'delivery'">
+	<div v-if="new_order_info.order_target == 'guest_user' && new_order_info.delivery_method == 'delivery'">
 		<stage-title title="Введите адрес доставки"/>
 		<el-input
 			placeholder="Напишите адрес доставки"
-			v-model="guest_delivery_address"
+			v-model="new_order_info.guest_delivery_address"
 		>
 		</el-input>
 	</div>
@@ -188,7 +188,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeMount, computed, ref } from 'vue';
+import { defineComponent, onBeforeMount, computed, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 
@@ -207,14 +207,17 @@ export default defineComponent({
 		// refs
 		const info_loaded = ref(false)
 		const phone_mask = "+7(###)-###-##-##"
-		//
-		const order_target = ref('')
-		const guest_phone_number = ref('')
-		const guest_phone_number_raw = ref('')
-		const guest_delivery_address = ref('')
-		const delivery_method = ref('')
-		const payment_method = ref('')
-		const pickup_address = ref('')
+		// reactive
+		const new_order_info = reactive({
+			authorized_user: null,
+			order_target: '',
+			guest_phone_number: '',
+			guest_phone_number_raw: '',
+			guest_delivery_address: '',
+			delivery_method: '',
+			payment_method: '',
+			pickup_address: ''
+		})
 		// new order items 
 
 		const order_targets = [
@@ -228,14 +231,14 @@ export default defineComponent({
 			var b = true
 			if (!cart.value) {return false}
 			if (cart.value.line_items.length == 0) {return false}
-			if (payment_method.value == '') {return false}
-			if (delivery_method.value == '') { return false}
-			if (order_target.value == '') {return false}
-			if (order_target.value == 'guest_user') {
-				if (guest_phone_number_raw.value.length != 11) { return false }
-				if (delivery_method.value == 'delivery' && guest_delivery_address.value == '') {return false}
+			if (new_order_info.payment_method == '') {return false}
+			if (new_order_info.delivery_method == '') { return false}
+			if (new_order_info.order_target == '') {return false}
+			if (new_order_info.order_target == 'guest_user') {
+				if (new_order_info.guest_phone_number_raw.length != 11) { return false }
+				if (new_order_info.delivery_method == 'delivery' && new_order_info.guest_delivery_address == '') {return false}
 			}
-			if (delivery_method.value == 'pickup' && pickup_address.value == '') { return false }
+			if (new_order_info.delivery_method == 'pickup' && new_order_info.pickup_address == '') { return false }
 			return b
 		});
 		// new order items
@@ -253,7 +256,7 @@ export default defineComponent({
 		});
 		const setGuestUserPhone = (e: Record<string,any>) => {
 			const raw_val = e.target.getAttribute('data-mask-raw-value')
-			guest_phone_number_raw.value = '7' + raw_val
+			new_order_info.guest_phone_number_raw = '7' + raw_val
 		}
 		const setModalState = (modal_name: string, is_open: boolean) => {
 			store.commit('site/setModalState', {modal_name: modal_name, is_open: is_open})
@@ -268,20 +271,19 @@ export default defineComponent({
 		const removeCartItem = async (item: Record<string,any>) => {
 			await store.dispatch('cart/removeLineItemAPI', {line_item: item})
 		}
+			// create order
+		const createOrder = () => {
+			if (!check_can_create_order.value) { return false }
+			store.dispatch('cart/createOrderAPI', new_order_info)
+		}
 
 		return {
 			order_targets,
 			// ref
 			info_loaded,
 			phone_mask,
-			//
-			order_target,
-			guest_phone_number,
-			guest_phone_number_raw,
-			guest_delivery_address,
-			delivery_method,
-			payment_method,
-			pickup_address,
+			// reactive order
+			new_order_info,
 			// orders items
 			// computed
 			checkout_common_info,
@@ -291,6 +293,7 @@ export default defineComponent({
 			cart,
 			session_id,
 			// functions
+			createOrder,
 			setGuestUserPhone,
 			setModalState,
 				// cart functions
