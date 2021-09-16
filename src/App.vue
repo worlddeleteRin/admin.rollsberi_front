@@ -71,6 +71,7 @@ export default defineComponent({
 		onBeforeMount(async () => {
 			// try to auth user
 			await store.dispatch("authorization/checkUserAuth")
+			await store.dispatch("site/checkGetSessionId")
 			initial_loaded.value = true
 		});
 

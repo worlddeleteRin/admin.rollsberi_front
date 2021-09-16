@@ -1,0 +1,27 @@
+<template>
+<div v-if="item">
+<div class="flex bg-green-200">
+	 item is {{ item.product.name }}
+</div>
+</div>
+</template>
+
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+export default defineComponent({
+	name: "CartLineItem",
+	props: {
+		item: {
+			type: Object,
+			default: null,
+		}
+	},
+	emits: [],
+	setup () {
+		return {
+		}
+	}
+});
+
+</script>

@@ -47,7 +47,9 @@
 					<div>{{ product.name }}</div>
 					<div>{{ product.description }}</div>
 				</div>
-				<el-button type="success" class="h-5">
+				<el-button 
+				@click="addItemClick(product)"
+				type="success" class="h-5">
 					Выбрать
 				</el-button>
 			</div>
@@ -83,6 +85,9 @@ export default defineComponent({
 		const findProducts = async (search_string: string) => {
 			found_products.value = await store.dispatch("products/findProductsAPI", search_string)
 		}
+		const addItemClick = async (product: Record<string,any>) => {
+			store.dispatch('cart/addLineItemAPI', {product: product})
+		}
 		return {
 			// refs
 			product_search_name,
@@ -90,6 +95,7 @@ export default defineComponent({
 			// functions
 			closeModal,
 			inputProductName,
+			addItemClick,
 		}
 	}
 });

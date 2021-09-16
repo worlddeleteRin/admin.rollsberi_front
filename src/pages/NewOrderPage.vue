@@ -10,6 +10,7 @@
 >
 	{{ checkout_common_info }}
 	{{ guest_phone_number_raw }}
+	session id is {{ session_id }}
 
 	<!-- chooise order taget -->
 	<stage-title title="Выберите, для кого создается заказ" 
@@ -109,7 +110,8 @@
 	<!-- eof guest delivery_address -->
 
 	<!-- add order items section -->
-	<div class="">
+	<div 
+	class="">
 		<stage-title title="Добавьте товары в заказ"/>
 		<el-button
 			@click="setModalState('new_order_add_product_open', true)"
@@ -119,19 +121,52 @@
 			Добавить товар в заказ
 		</el-button>
 		<!-- order items -->
-		<div>	
-			items are here
+		<div v-if="cart">	
 			<div
-				v-for="item in order_cart"
+				v-for="item in cart.line_items"
 				:key="item"
 			>
-				{{ item }}
+				<cart-line-item 
+					:item="item"
+					@delete-quantity="deleteCartItemQuantity"
+					@add-quantity="addCartItemQuantity"
+					@remove-item="removeCartItem"
+				/>
 			</div>
 		</div>
 		<!-- eof order items -->
+		<!-- cart summary -->
+		<div
+			v-if="cart && cart.line_items.length > 0"
+			class="flex flex-col items-center flex-1 w-11/12"
+		>
+			<div>Цена без скидок: 
+				<span class="text-md">{{ cart.base_amount }}</span>
+			</div>
+
+			<div>Общая сумма скидки: 
+				<span class="text-md">{{ cart.discount_amount }}</span>
+			</div>
+			<div>Итоговая стоимость: 
+				<span class="text-2xl">{{ cart.total_amount }}</span>
+			</div>
+		</div>
+		<!-- eof cart summary -->
 
 	</div>
 	<!-- eof add order items section -->
+
+	<!-- create order button -->
+	<div class="mt-3">
+		<el-button
+			:disabled="!check_can_create_order"
+			@click="createOrder"
+			type="success"
+		>
+			Создать заказ
+		</el-button>
+	</div>
+	<!-- eof create order button -->
 
 </div>
 
@@ -158,11 +193,13 @@ import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 
 import OrderAddProductModal from '@/components/modals/OrderAddProductModal.vue';
+import CartLineItem from '@/components/cart/CartLineItem.vue';
 
 export default defineComponent({
 	name: "NewOrderPage",
 	components: {
 		OrderAddProductModal,
+		CartLineItem,
 	},
 	setup (props, {emit}) {
 		const store = useStore()
@@ -186,14 +223,31 @@ export default defineComponent({
 		]
 
 		// computed
+		// check if can create order
+		const check_can_create_order = computed(() => {
+			var b = true
+			if (!cart.value) {return false}
+			if (cart.value.line_items.length == 0) {return false}
+			if (payment_method.value == '') {return false}
+			if (delivery_method.value == '') { return false}
+			if (order_target.value == '') {return false}
+			if (order_target.value == 'guest_user') {
+				if (guest_phone_number_raw.value.length != 11) { return false }
+				if (delivery_method.value == 'delivery' && guest_delivery_address.value == '') {return false}
+			}
+			if (delivery_method.value == 'pickup' && pickup_address.value == '') { return false }
+			return b
+		});
 		// new order items
-		const order_cart = computed(() => store.state.orders.order_cart);
+		const cart = computed(() => store.state.cart.cart);
 		const checkout_common_info = computed(() => store.state.site.common_info.checkout);
+		const session_id = computed(() => store.state.site.session_id);
 		// modals states
 		const modals = computed(() => store.state.site.modals);
 		// functions
 		onBeforeMount( async () => {
 			await store.dispatch('site/getCheckoutCommonInfoAPI')
+			await store.dispatch('cart/getCartAPI')
 			info_loaded.value = true
 			return
 		});
@@ -203,6 +257,16 @@ export default defineComponent({
 		}
 		const setModalState = (modal_name: string, is_open: boolean) => {
 			store.commit('site/setModalState', {modal_name: modal_name, is_open: is_open})
+		}
+		// cart functions
+		const addCartItemQuantity = async (item: Record<string,any>) => {
+			await store.dispatch('cart/addLineItemQuantityAPI', {line_item: item})
+		}
+		const deleteCartItemQuantity = async (item: Record<string,any>) => {
+			await store.dispatch('cart/removeLineItemQuantityAPI', {line_item: item})
+		}
+		const removeCartItem = async (item: Record<string,any>) => {
+			await store.dispatch('cart/removeLineItemAPI', {line_item: item})
 		}
 
 		return {
@@ -222,11 +286,17 @@ export default defineComponent({
 			// computed
 			checkout_common_info,
 			modals,
+			check_can_create_order,
 			// order cart
-			order_cart,
+			cart,
+			session_id,
 			// functions
 			setGuestUserPhone,
 			setModalState,
+				// cart functions
+			addCartItemQuantity,
+			deleteCartItemQuantity,
+			removeCartItem,
 		}
 	}
 });

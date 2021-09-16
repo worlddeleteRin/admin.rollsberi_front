@@ -10,6 +10,14 @@ class SiteDataServiceClass {
 			});
 		return response
 	};
+	async getSessionId(): Promise<any> {
+		const response: Record<string,any> = await apiClient.get(
+		"session", 
+		).catch(() => {
+			return response 
+		});
+		return response 
+	}
 }
 
 export const SiteDataService = new SiteDataServiceClass()
