@@ -2,6 +2,9 @@
 <div 
 	v-if="orders_loaded"
 >
+	<page-title
+		title="Заказы"
+	/>
 
 	<el-table
 		:data="orders"

@@ -11,10 +11,8 @@ import 'element-plus/dist/index.css';
 
 import { Icon } from '@iconify/vue';
 import PageTitle from '@/components/text/PageTitle.vue';
-import StageTitle from '@/components/text/StageTitle.vue';
-
 // maska 
-import Maska from 'maska';
+import VueMask from 'v-mask';
 
 
 const app = createApp(App)
@@ -22,12 +20,11 @@ const app = createApp(App)
 app.use(store)
 app.use(router)
 app.use(ElementPlus)
-app.use(Maska)
+app.use(VueMask)
 
 // app global components
 app.component('Icon', Icon)
 app.component('PageTitle', PageTitle)
-app.component('StageTitle', StageTitle)
 
 
 app.mount("#app");

@@ -6,6 +6,7 @@ import {
 const state = {
 	orders: null,
 	current_order: null,
+	order_cart: null,
 }
 const mutations = {
 	setOrders(state: Record<string,any>, orders: Array<Record<string,any>>) {

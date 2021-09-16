@@ -1,6 +1,9 @@
 <template>
 <div>
-order page is here
+
+<page-title
+	title="Изменение заказа"
+/>
 
 <div 
 	v-if="order_loaded"
