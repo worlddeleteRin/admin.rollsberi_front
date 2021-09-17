@@ -63,13 +63,19 @@
 					>
 						<Icon icon="akar-icons:edit" width="20" />
 					</el-button>
-					<el-button
-						type="danger"
-						size="small"
-						@click="deleteOrder(scope.row)"
+					<el-popconfirm
+						title="Sure, you want to delete this order?"
+						@confirm="deleteOrder(scope.row)"
 					>
-						<Icon icon="akar-icons:edit" width="20" />
-					</el-button>
+						<template #reference>
+							<el-button
+								type="danger"
+								size="small"
+							>
+								<Icon icon="ant-design:delete-filled" width="20" />
+							</el-button>
+						</template>
+					</el-popconfirm>
 				</div>
 			</template>
 		</el-table-column>
@@ -144,6 +150,7 @@ export default defineComponent({
 			// functions
 			goOrderPage,
 			goCreateOrderPage,
+			deleteOrder,
 		}
 	}
 });

@@ -30,6 +30,17 @@
 	</el-select>
 	<!-- eof choose order target -->
 
+	<!-- select authorized user container -->
+		<stage-title title="Choose user"/>
+		<el-button
+			@click="setModalState('new_order_add_user_open', true)"
+			type="primary"
+			size="medium"
+		>
+			choose user	
+		</el-button>
+	<!-- eof select authorized user container -->
+
 	<!-- choose delivery method -->
 	<div>
 	<stage-title title="Выберите способ доставки"/>
@@ -177,10 +188,16 @@
 <!-- eof order not loaded block -->
 
 <!-- modals -->
+	<!-- add product modal -->
 	<order-add-product-modal
 		v-if="modals.new_order_add_product_open"
 		@close-modal="setModalState('new_order_add_product_open', false)"
 	/>
+	<order-add-user-modal
+		v-if="modals.new_order_add_user_open"
+		@close-modal="setModalState('new_order_add_user_open', false)"
+	/>
+	<!-- eof add product modal -->
 <!-- eof modals -->
 
 </div>
@@ -192,13 +209,18 @@ import { defineComponent, onBeforeMount, computed, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
 
-import OrderAddProductModal from '@/components/modals/OrderAddProductModal.vue';
+// local components
 import CartLineItem from '@/components/cart/CartLineItem.vue';
+
+// modals
+import OrderAddProductModal from '@/components/modals/OrderAddProductModal.vue';
+import OrderAddUserModal from '@/components/modals/OrderAddUserModal.vue';
 
 export default defineComponent({
 	name: "NewOrderPage",
 	components: {
 		OrderAddProductModal,
+		OrderAddUserModal,
 		CartLineItem,
 	},
 	setup (props, {emit}) {
