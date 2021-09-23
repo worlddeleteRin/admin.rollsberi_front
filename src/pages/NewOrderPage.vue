@@ -8,9 +8,6 @@
 <div 
 	v-if="info_loaded"
 >
-	{{ checkout_common_info }}
-	session id is {{ session_id }}
-	{{ new_order_info }}
 
 	<!-- chooise order taget -->
 	<stage-title title="Выберите, для кого создается заказ" 

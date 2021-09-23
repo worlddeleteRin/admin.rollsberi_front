@@ -16,9 +16,6 @@
 		:adminUser="admin_user"
 	/>
 
-	main app is here
-	{{ access_token }}
-
 	<div class="px-4 my-5">
 		<router-view>
 		</router-view>
@@ -40,6 +37,8 @@
 <div v-else>
 	Загрузка...
 </div>
+
+{{ access_token }}
 
 </template>
 

@@ -64,7 +64,9 @@
 						<Icon icon="akar-icons:edit" width="20" />
 					</el-button>
 					<el-popconfirm
-						title="Sure, you want to delete this order?"
+						title="Вы уверены, что хотите удалить заказ?"
+						confirmButtonText="Да"
+						cancelButtonText="Нет"
 						@confirm="deleteOrder(scope.row)"
 					>
 						<template #reference>
@@ -81,6 +83,19 @@
 		</el-table-column>
 
 	</el-table>
+
+	orders info is {{ orders_info }}
+	<!-- orders pagination -->
+	<div class="mt-3">
+		<el-pagination
+			background 
+			layout="prev, pager, next"
+			v-model:current-page="orders_current_page"
+			:page-count="orders_info.pages_count"
+		>
+		</el-pagination>
+	</div>
+	<!-- eof orders pagination -->
 
 	<!-- new order button -->
 	<el-button
@@ -119,6 +134,16 @@ export default defineComponent({
 		const router = useRouter()
 		// computed
 		const orders = computed(() => store.state.orders.orders);
+		const orders_info = computed(() => store.state.orders.orders_info);
+		const orders_current_page = computed({
+			get () {
+				return orders_info.value.current_page
+			},
+			async set(new_value: string) {
+				await store.dispatch("orders/getOrdersAPI", {"page": new_value})
+				console.log('new pagination value is set', new_value)
+			}
+		});
 		// functions
 		onBeforeMount( async () => {
 			if (orders.value) {
@@ -147,6 +172,8 @@ export default defineComponent({
 			orders_loaded,
 			// computed
 			orders,
+			orders_current_page,
+			orders_info,
 			// functions
 			goOrderPage,
 			goCreateOrderPage,

@@ -5,11 +5,19 @@ import {
 
 const state = {
 	orders: null,
+	orders_info: {
+		count: null,
+		pages_count: null,
+		current_page: null,
+	},
 	current_order: null,
 }
 const mutations = {
 	setOrders(state: Record<string,any>, orders: Array<Record<string,any>>) {
 		state.orders = orders;
+	},
+	setOrdersInfo(state: Record<string,any>, info: Record<string,any>) {
+		state.orders_info = {...info }
 	},
 	setCurrentOrder(state: Record<string,any>, order: Record<string,any>) {
 		state.current_order = order;
@@ -26,6 +34,7 @@ const actions = {
 		if (!resp_data) { return false; }
 		if (!(resp_data.status == 200)) { return false; }
 		context.commit('setOrders', resp_data.data.orders)
+		context.commit('setOrdersInfo', resp_data.data.info)
 	},
 	async getOrderAPI(
 		context: ActionContext<any,any>, order_id: string
