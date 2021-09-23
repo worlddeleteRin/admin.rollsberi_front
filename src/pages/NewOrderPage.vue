@@ -207,7 +207,8 @@
 <script lang="ts">
 import { defineComponent, onBeforeMount, computed, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
-import { useRoute } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
+import { ElNotification } from 'element-plus';
 
 // local components
 import CartLineItem from '@/components/cart/CartLineItem.vue';
@@ -226,6 +227,7 @@ export default defineComponent({
 	setup (props, {emit}) {
 		const store = useStore()
 		const route = useRoute()
+		const router = useRouter()
 		// refs
 		const info_loaded = ref(false)
 		const phone_mask = "+7(###)-###-##-##"
@@ -294,9 +296,16 @@ export default defineComponent({
 			await store.dispatch('cart/removeLineItemAPI', {line_item: item})
 		}
 			// create order
-		const createOrder = () => {
+		const createOrder = async () => {
 			if (!check_can_create_order.value) { return false }
-			store.dispatch('cart/createOrderAPI', new_order_info)
+			const order_created: boolean = await store.dispatch('cart/createOrderAPI', new_order_info)
+			if (!order_created) { 
+				return ElNotification({title: 'Ошибка во время создания заказа', type: 'error'})
+			}
+			ElNotification({title: 'Заказ успешно создан', type: 'success'})
+			await store.dispatch('orders/getOrdersAPI')
+			return router.push('/orders')
+
 		}
 
 		return {
