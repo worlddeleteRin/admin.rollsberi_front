@@ -31,14 +31,44 @@
 	<!-- eof choose order target -->
 
 	<!-- select authorized user container -->
-		<stage-title title="Choose user"/>
+	<div 
+		v-if="new_order_info.order_target == 'authorized_user'"
+	>
+		<stage-title title="Выберите клиента"/>
+		<!-- open select user modal button -->
 		<el-button
+			v-if="!new_order_info.authorized_user"
 			@click="setModalState('new_order_add_user_open', true)"
 			type="primary"
 			size="medium"
 		>
-			choose user	
+			Выбрать клиента	
 		</el-button>
+		<!-- eof open select user modal button -->
+		<!-- selected user -->
+		<div v-else class="max-w-[400px] bg-gray-100 flex rounded-md items-center px-3 py-2 justify-between flex-shrink w-full">
+			<div class="flex flex-shrink">
+				<div>
+					<Icon icon="ant-design:user-outlined" width="25"/>
+				</div>
+				<div>
+					{{ new_order_info.authorized_user.username }}, 
+					{{ new_order_info.authorized_user.name }}
+				</div>
+			</div>
+			<div class="flex items-center">
+				<div class="px-2 py-1 bg-red-100 rounded-lg">
+					🎉 {{ new_order_info.authorized_user.bonuses }}
+				</div>
+				<div @click="setAuthorizedUser(null)">
+					<Icon icon="clarity:remove-solid" width="25"
+						class="ml-1 text-red-500 cursor-pointer"
+					/>
+				</div>
+			</div>
+		</div>
+		<!-- eof selected user -->
+	</div>
 	<!-- eof select authorized user container -->
 
 	<!-- choose delivery method -->
@@ -196,6 +226,7 @@
 	<order-add-user-modal
 		v-if="modals.new_order_add_user_open"
 		@close-modal="setModalState('new_order_add_user_open', false)"
+		@set-order-user="setAuthorizedUser"
 	/>
 	<!-- eof add product modal -->
 <!-- eof modals -->
@@ -233,7 +264,7 @@ export default defineComponent({
 		const phone_mask = "+7(###)-###-##-##"
 		// reactive
 		const new_order_info = reactive({
-			authorized_user: null,
+			authorized_user: null as unknown,
 			order_target: '',
 			guest_phone_number: '',
 			guest_phone_number_raw: '',
@@ -295,6 +326,10 @@ export default defineComponent({
 		const removeCartItem = async (item: Record<string,any>) => {
 			await store.dispatch('cart/removeLineItemAPI', {line_item: item})
 		}
+		// set authorized user to order
+		const setAuthorizedUser = (user: Record<string,any>) =>  {
+			new_order_info.authorized_user = user
+		}
 			// create order
 		const createOrder = async () => {
 			if (!check_can_create_order.value) { return false }
@@ -331,6 +366,8 @@ export default defineComponent({
 			addCartItemQuantity,
 			deleteCartItemQuantity,
 			removeCartItem,
+				// set user to order
+			setAuthorizedUser,
 		}
 	}
 });

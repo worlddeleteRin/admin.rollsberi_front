@@ -8,13 +8,13 @@
 <div class="relative w-full h-full overflow-hidden">
 	<div>
 		<page-title
-			title="Add user to new order"
+			title="Добавление пользователя к заказу"
 			class="mb-3"
 		/>
 		<el-input
 			:modelValue="user_search_username"
 			@input="inputUserUsername"
-			placeholder="Start typing user username(phone)..."
+			placeholder="Начните набирать логин клиента (номер телефона)..."
 		>
 		</el-input>
 	</div>
@@ -29,7 +29,7 @@
 	<div 
 	v-if="found_users && found_users.length == 0"
 	class="flex items-center justify-center mt-5 text-2xl tracking-wide text-gray-400">
-		User не найден
+		Клиенты не найден
 	</div>
 
 	<div
@@ -65,7 +65,7 @@ import { useStore } from 'vuex';
 
 export default defineComponent({
 	name: "OrderAddProductModal",
-	emits: ['close-modal'],
+	emits: ['close-modal', 'set-order-user'],
 	setup (props, {emit}) {
 		const store = useStore()
 		// refs
@@ -85,6 +85,8 @@ export default defineComponent({
 			found_users.value = await store.dispatch("users/findUsersAPI", search_string)
 		}
 		const selectUserClick = async (user: Record<string,any>) => {
+			emit('set-order-user', user)
+			emit('close-modal')
 			//store.dispatch('cart/addLineItemAPI', {product: product})
 		}
 		return {
