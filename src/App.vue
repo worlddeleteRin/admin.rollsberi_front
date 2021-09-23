@@ -14,6 +14,7 @@
 
 	<MainHeader
 		:adminUser="admin_user"
+		@logout="logoutAdmin"
 	/>
 
 	<div class="px-4 my-5">
@@ -80,6 +81,9 @@ export default defineComponent({
 				await store.dispatch("authorization/checkUserAuth")
 			}
 		}
+		const logoutAdmin = async () => {
+			await store.dispatch("authorization/logoutAdmin")
+		}
 
 		return {
 			// ref
@@ -90,6 +94,7 @@ export default defineComponent({
 			is_authorized,
 			// functions
 			loginAdmin,
+			logoutAdmin,
 		}
 	}
 });

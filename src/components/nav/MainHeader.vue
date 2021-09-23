@@ -8,17 +8,31 @@
 	<!-- eof sidebar content -->
 	<!-- user block -->
 	<div class="flex justify-end flex-1">
-		<div class="flex items-center px-5 py-2 rounded-lg cursor-pointer bg-def_btn_dim max-w-max">
-			<Icon
-				icon="bx:bx-user"
-				width="28"
-				class="text-def_btn_text"
-			/>
-			<div class="ml-1 text-def_btn_text">
-				{{ adminUser.name }}	
+		<el-dropdown class="flex items-center flex-1 px-2 py-2 max-w-max">
+			<div class="flex items-center flex-1 w-full px-2 py-2 rounded-lg cursor-pointer bg-def_btn_dim">
+				<div>
+				<Icon
+					icon="bx:bx-user"
+					width="28"
+					class="text-def_btn_text"
+				/>
+				</div>
+				<div class="ml-1 text-def_btn_text">
+					{{ adminUser.name }}
+				</div>
 			</div>
-		</div>
+			<template #dropdown>
+				<el-dropdown-menu>
+					<el-dropdown-item
+						@click="logoutAdminClick"
+					>
+							Выйти
+					</el-dropdown-item>
+				</el-dropdown-menu>
+			</template>
+		</el-dropdown>
 	</div>
+
 	<!-- eof user block -->
 
 </div>
@@ -40,10 +54,13 @@ export default defineComponent({
 			default: null,
 		}
 	},
-	setup () {
-		
+	emits: ['logout'],
+	setup (props, {emit}) {
+		// functions	
+		const logoutAdminClick = () => emit('logout')
 		return {
-
+			// functions
+			logoutAdminClick,
 		}
 	}
 });

@@ -5,6 +5,7 @@ import {
 
 
 const state = {
+	order_statusses: null,
 	common_info: {
 		phone: "some phone is here",
 		checkout: null,
@@ -16,6 +17,9 @@ const state = {
 	session_id: null,
 }
 const mutations = {
+	setOrderStatusses(state: Record<string,any>, order_statusses: Record<string,any>) {
+		state.order_statusses = order_statusses
+	},
 	setCheckoutCommonInfo(state: Record<string,any>, checkout_common_info: Record<string,any>) {
 		state.common_info.checkout = checkout_common_info
 	},
@@ -60,6 +64,15 @@ const actions = {
 		}
 		return false
 	},
+	async getOrderStatussesAPI(
+		context: ActionContext<any,any>, 
+	) {
+		const access_token = context.rootState.authorization.access_token
+		const resp_data: Record<string,any> = await SiteDataService.getOrderStatusses(access_token)
+		if (!resp_data) { return false; }
+		if (!(resp_data.status == 200)) { return false; }
+		context.commit('setOrderStatusses', resp_data.data)
+	}
 }
 
 export default {

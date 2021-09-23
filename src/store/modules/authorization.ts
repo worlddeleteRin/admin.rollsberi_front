@@ -49,7 +49,6 @@ const actions = {
 	async loginAdminAPI(
 		context: ActionContext<any,any>, login_info: Record<string,any>
 	) {
-		console.log('run action, login info is', login_info)
 		const resp_data: Record<string,any> = await AuthDataService.loginAdmin(
 			login_info.username, login_info.password	
 		)
@@ -62,6 +61,14 @@ const actions = {
 			}
 		}
 		return false
+	},
+	async logoutAdmin(
+		context: ActionContext<any,any>
+	) {
+		context.commit('setUserAccessToken', null)	
+		context.commit('setUserAuthorized', false)
+		localStorage.removeItem("user_access_token")
+		return 
 	}
 }
 

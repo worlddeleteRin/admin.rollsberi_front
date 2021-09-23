@@ -84,9 +84,10 @@
 
 	</el-table>
 
-	orders info is {{ orders_info }}
 	<!-- orders pagination -->
-	<div class="mt-3">
+	<div class="mt-3"
+		v-if="orders_info.pages_count > 0"
+	>
 		<el-pagination
 			background 
 			layout="prev, pager, next"

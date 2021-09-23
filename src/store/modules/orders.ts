@@ -19,6 +19,7 @@ const mutations = {
 	setOrdersInfo(state: Record<string,any>, info: Record<string,any>) {
 		state.orders_info = {...info }
 	},
+
 	setCurrentOrder(state: Record<string,any>, order: Record<string,any>) {
 		state.current_order = order;
 	}
@@ -53,7 +54,8 @@ const actions = {
 		if (!resp_data) { return false; }
 		if (!(resp_data.status == 200)) { return false; }
 		await context.dispatch('getOrdersAPI')
-	}
+	},
+
 }
 
 export default {
