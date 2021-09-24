@@ -40,6 +40,20 @@ class OrdersDataServiceClass {
 			});
 		return response
 	};
+	async updateOrder(user_access_token: string, order_id: string, update_order: Record<string,any>): Promise<any> {
+		const response: Record<string,any> = await apiClient.patch(
+		"/orders/" + order_id, 
+			{ ...update_order },
+			{
+				headers: {
+					"Authorization": `Bearer ${user_access_token}`
+				},
+			}
+			).catch(() => {
+				return response
+			});
+		return response
+	};
 }
 
 export const OrdersDataService = new OrdersDataServiceClass()
