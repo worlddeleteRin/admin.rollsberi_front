@@ -34,7 +34,7 @@
 		<stage-title title="Выберите клиента"/>
 		<!-- open select user modal button -->
 		<el-button
-			v-if="!new_order_info.authorized_user"
+			v-if="authorizedUserEmpty"
 			@click="setModalState('new_order_add_user_open', true)"
 			type="primary"
 			size="medium"
@@ -43,7 +43,8 @@
 		</el-button>
 		<!-- eof open select user modal button -->
 		<!-- selected user -->
-		<div v-else class="max-w-[400px] bg-gray-100 flex rounded-md items-center px-3 py-2 justify-between flex-shrink w-full">
+		<div v-if="!authorizedUserEmpty"
+		class="max-w-[400px] bg-gray-100 flex rounded-md items-center px-3 py-2 justify-between flex-shrink w-full">
 			<div class="flex flex-shrink">
 				<div>
 					<Icon icon="ant-design:user-outlined" width="25"/>
@@ -65,6 +66,29 @@
 			</div>
 		</div>
 		<!-- eof selected user -->
+		<!-- selected user addresses -->
+		<div v-if="!authorizedUserEmpty && new_order_info.delivery_method == 'delivery'">
+			<el-select
+				v-model="new_order_info.delivery_address"
+				placeholder="Выберите адрес доставки"
+			>
+				<el-option
+					v-for="address in user_delivery_addresses"
+					:key="address.id"
+					:label="address.address_display"
+					:value="address.id"
+				>
+				</el-option>
+			</el-select>
+				<el-button
+					@click="setModalState('add_user_delivery_address_open', true)"
+					type="primary"
+					class="ml-2"
+				>
+					Добавить новый адрес
+				</el-button>
+		</div>
+		<!-- eof selected user addresses -->
 	</div>
 	<!-- eof select authorized user container -->
 
@@ -225,6 +249,11 @@
 		@close-modal="setModalState('new_order_add_user_open', false)"
 		@set-order-user="setAuthorizedUser"
 	/>
+	<create-delivery-address-modal
+		v-if="modals.add_user_delivery_address_open"
+		@close-modal="setModalState('add_user_delivery_address_open', false)"
+		@create-delivery-address="createUserDeliveryAddress"
+	/>
 	<!-- eof add product modal -->
 <!-- eof modals -->
 
@@ -237,6 +266,7 @@ import { defineComponent, onBeforeMount, computed, ref, reactive } from 'vue';
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 import { ElNotification } from 'element-plus';
+import CreateDeliveryAddressModal from '@/components/modals/CreateDeliveryAddressModal.vue';
 
 // local components
 import CartLineItem from '@/components/cart/CartLineItem.vue';
@@ -251,6 +281,7 @@ export default defineComponent({
 		OrderAddProductModal,
 		OrderAddUserModal,
 		CartLineItem,
+		CreateDeliveryAddressModal,
 	},
 	setup (props, {emit}) {
 		const store = useStore()
@@ -259,9 +290,11 @@ export default defineComponent({
 		// refs
 		const info_loaded = ref(false)
 		const phone_mask = "+7(###)-###-##-##"
+		var user_delivery_addresses = ref(null)
 		// reactive
 		const new_order_info = reactive({
-			authorized_user: null as unknown,
+			authorized_user: {} as Record<string,any>,
+			delivery_address: null as unknown,
 			order_target: '',
 			guest_phone_number: '',
 			guest_phone_number_raw: '',
@@ -279,6 +312,8 @@ export default defineComponent({
 
 		// computed
 		// check if can create order
+			// check, if authorized user is empty
+		const authorizedUserEmpty = computed( () => Object.keys(new_order_info.authorized_user).length == 0);
 		const check_can_create_order = computed(() => {
 			var b = true
 			if (!cart.value) {return false}
@@ -324,8 +359,25 @@ export default defineComponent({
 			await store.dispatch('cart/removeLineItemAPI', {line_item: item})
 		}
 		// set authorized user to order
-		const setAuthorizedUser = (user: Record<string,any>) =>  {
+		const setAuthorizedUser = async (user: Record<string,any>) =>  {
 			new_order_info.authorized_user = user
+			if (new_order_info.authorized_user) {
+				const delivery_addresses = await store.dispatch('users/getUserAddressesAPI', user.id)
+				if (!delivery_addresses) { return false;}
+				user_delivery_addresses.value = delivery_addresses
+			} else {
+				user_delivery_addresses.value = null
+				new_order_info.delivery_address = null
+			}
+
+		}
+			// create user delivery address
+		const createUserDeliveryAddress = async (new_address: Record<string,any>) => {
+			var new_delivery_addresses = await store.dispatch("users/createUserDeliveryAddressAPI", 
+			{ new_address: new_address, user_id: new_order_info.authorized_user.id })
+			if (!new_delivery_addresses) { return false; }
+			user_delivery_addresses.value = new_delivery_addresses
+			new_order_info.delivery_address = new_delivery_addresses[0].id
 		}
 			// create order
 		const createOrder = async () => {
@@ -337,7 +389,6 @@ export default defineComponent({
 			ElNotification({title: 'Заказ успешно создан', type: 'success'})
 			await store.dispatch('orders/getOrdersAPI')
 			return router.push('/orders')
-
 		}
 
 		return {
@@ -345,10 +396,12 @@ export default defineComponent({
 			// ref
 			info_loaded,
 			phone_mask,
+			user_delivery_addresses,
 			// reactive order
 			new_order_info,
 			// orders items
 			// computed
+			authorizedUserEmpty,
 			checkout_common_info,
 			modals,
 			check_can_create_order,
@@ -365,6 +418,8 @@ export default defineComponent({
 			removeCartItem,
 				// set user to order
 			setAuthorizedUser,
+				// create user delivery address
+			createUserDeliveryAddress,
 		}
 	}
 });

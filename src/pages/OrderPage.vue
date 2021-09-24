@@ -39,6 +39,59 @@
 		</el-select>
 	</div>
 	<!-- order status select -->
+
+	<!-- order delivery method -->
+	<div>
+		<stage-title title="Способ доставки" 
+		/>
+		<div class="text-lg font-semibold"> {{ order.delivery_method.name }} </div>
+	</div>
+	<!-- eof order delivery method -->
+	<!-- order payment method -->
+	<div>
+		<stage-title title="Способ оплаты" 
+		/>
+		<div class="text-lg font-semibold"> {{ order.payment_method.name }} </div>
+	</div>
+	<!-- eof order payment method -->
+
+	<!-- delivery address -->
+	<div>
+		<stage-title title="Адрес доставки" 
+		/>
+		<div>
+			{{order.customer_id ? order.delivery_address.address_display : order.guest_delivery_address}}
+		</div>
+	</div>
+	<!-- eof delivery address -->
+
+
+	<stage-title title="Клиент" 
+	/>
+	<!-- order authorized user -->
+	<div v-if="order.customer_id"
+		class="flex items-center flex-1 px-4 py-2 bg-gray-100 rounded-lg cursor-pointer max-w-max"
+	>
+		<div class="p-2 mx-2 bg-green-400 rounded-full max-w-max">
+			<Icon icon="bx:bxs-user" class="text-white" />
+		</div>
+		<div class="mr-4">
+			{{ order.customer_username }}
+		</div>
+	</div>
+	<!-- eof order authorized user -->
+	<!-- order authorized user -->
+	<div v-if="!order.customer_id"
+		class="flex items-center flex-1 px-4 py-2 bg-gray-100 rounded-lg max-w-max"
+	>
+		<div class="p-2 mx-2 bg-blue-400 rounded-full max-w-max">
+			<Icon icon="bx:bxs-user" class="text-white" />
+		</div>
+		<div class="mr-4">
+			{{ order.guest_phone_number }}
+		</div>
+	</div>
+	<!-- eof order authorized user -->
 	
 	<!-- order content -->
 	<div>
@@ -106,8 +159,6 @@
 		</el-button>
 	</div>
 	<!-- eof save order -->
-
-	{{ order }}
 </div>
 <!-- eof product info -->
 

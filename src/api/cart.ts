@@ -54,7 +54,7 @@ class CartDataServiceClass {
 	// order section
 	// create order
 	async createOrderAdmin(line_items: Array<Record<string,any>>, user_access_token: string, session_id: string | null, checkout_info: Record<string,any>): Promise<any> {
-		const delivery_address = checkout_info.delivery_address == null ? null: checkout_info.delivery_address.id
+		const delivery_address = checkout_info.delivery_address == null ? null: checkout_info.delivery_address
 		const pickup_address = checkout_info.pickup_address == null ? null: checkout_info.pickup_address.id
 		let customer_id = checkout_info.authorized_user == null ? null: checkout_info.authorized_user.id
 		if (checkout_info.order_target == 'guest_user') {

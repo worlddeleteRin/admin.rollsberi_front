@@ -13,6 +13,7 @@ const state = {
 	modals: {
 		new_order_add_product_open: false,
 		new_order_add_user_open: false,
+		add_user_delivery_address_open: false,
 	},
 	session_id: null,
 }
