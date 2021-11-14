@@ -126,19 +126,27 @@
 		<div class="flex items-center">
 			<stage-title title="Сумма заказа без скидки" />
 			<div class="mt-2 ml-3 text-lg">
-				{{ order.base_amount }} &#8381;
+				{{ order.cart.base_amount }} &#8381;
 			</div>
 		</div>
 		<div class="flex items-center">
 			<stage-title title="Сумма скидки" />
 			<div class="mt-2 ml-3 text-lg">
-				{{ order.discount_amount }} &#8381;
+				{{ order.cart.discount_amount }} &#8381;
+			</div>
+		</div>
+		<div class="flex items-center"
+            v-if="order.cart.bonuses_used"
+        >
+			<stage-title title="Оплачено бонусами" />
+			<div class="mt-2 ml-3 text-lg">
+				{{ order.cart.pay_with_bonuses }} &#8381;
 			</div>
 		</div>
 		<div class="flex items-center">
 			<stage-title title="Общая сумма заказа" />
 			<div class="mt-2 ml-3 text-lg">
-				{{ order.total_amount }} &#8381;
+				{{ order.cart.total_amount }} &#8381;
 			</div>
 		</div>
 	</div>

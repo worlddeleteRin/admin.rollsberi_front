@@ -49,7 +49,7 @@
 		<el-table-column label="Сумма">
 			<template #default="scope">
 				<div class="text-xl tracking-wider text-black">
-				{{ scope.row.total_amount }} &#8381; 
+				{{ scope.row.cart?.total_amount }} &#8381; 
 				</div>
 			</template>
 		</el-table-column>
