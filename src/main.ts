@@ -6,8 +6,12 @@ import store from "./store";
 import './main.css'
 
 // ElementPlus
-import ElementPlus from 'element-plus';
-import 'element-plus/dist/index.css';
+// import ElementPlus from 'element-plus';
+import {
+    Table
+} from "ant-design-vue"
+// import 'element-plus/dist/index.css';
+import "ant-design-vue/dist/antd.css";
 
 import { Icon } from '@iconify/vue';
 import PageTitle from '@/components/text/PageTitle.vue';
@@ -19,10 +23,13 @@ import Maska from 'maska';
 
 const app = createApp(App)
 
+app.use(Table)
+
 app.use(store)
 app.use(router)
-app.use(ElementPlus)
+// app.use(ElementPlus)
 app.use(Maska)
+
 
 // app global components
 app.component('Icon', Icon)

@@ -6,19 +6,19 @@
 		title="Заказы"
 	/>
 
-	<el-table
-		:data="orders"
+	<a-table
+		:data-source="orders"
 	>
-		<el-table-column label="Клиент">
-			<template #default="scope">
+		<a-table-column label="Клиент" key="customer_username" data-index="customer_id">
+			<template>
 				<div 
 				class="flex items-center tracking-wide text-black text-md"
-					v-if="scope.row.customer_id"
+					v-if="customer_id"
 				>
 					<div class="p-2 mr-2 bg-green-400 rounded-full">
 						<Icon icon="bx:bxs-user" class="text-white"/>
 					</div>
-					{{ scope.row.customer_username }}
+                        customer_username here
 				</div>
 				<div
 					class="flex items-center tracking-wide text-black text-md"
@@ -27,39 +27,41 @@
 					<div class="p-2 mr-2 bg-blue-400 rounded-full">
 						<Icon icon="bx:bxs-user" class="text-white"/>
 					</div>
-					{{ scope.row.guest_phone_number }}
+                        guest_phone_number here
 				</div>
 			</template>
-		</el-table-column>
-		<el-table-column label="Дата">
-			<template #default="scope">
-				{{ scope.row.date_created }}
-			</template>
-		</el-table-column>
-		<el-table-column label="Статус">
-			<template #default="scope">
+		</a-table-column>
+
+		<a-table-column title="Дата" key="date_created" data-index="date_created"/>
+
+		<a-table-column title="Статус" key="status">
+			<template #bodyCell="{ record }">
 				<div
 					class="px-3 py-1 text-white rounded-lg max-w-max"
-					:style="'background-color: ' + scope.row.status.color"
+					:style="'background-color: ' + record?.status.color"
 				>
-					{{ scope.row.status.name_display }}
+                    статус тут
+                    {{ record }}
+					{{ record?.status.name_display }}
 				</div>
 			</template>
-		</el-table-column>
-		<el-table-column label="Сумма">
-			<template #default="scope">
+		</a-table-column>
+
+		<a-table-column title="Сумма" key="cart?.total_amount" data-index="cart?.total_amount">
+			<template>
 				<div class="text-xl tracking-wider text-black">
-				{{ scope.row.cart?.total_amount }} &#8381; 
+				{{ total_amount }} &#8381; 
 				</div>
 			</template>
-		</el-table-column>
-		<el-table-column label="Действия">
-			<template #default="scope">
+		</a-table-column>
+
+		<a-table-column title="Действия">
+			<template #bodyCell="record">
 				<div class="">
 					<el-button
 						type="primary"
 						size="small"
-						@click="goOrderPage(scope.row)"
+						@click="goOrderPage(record)"
 					>
 						<Icon icon="akar-icons:edit" width="20" />
 					</el-button>
@@ -67,7 +69,7 @@
 						title="Вы уверены, что хотите удалить заказ?"
 						confirmButtonText="Да"
 						cancelButtonText="Нет"
-						@confirm="deleteOrder(scope.row)"
+						@confirm="deleteOrder(record)"
 					>
 						<template #reference>
 							<el-button
@@ -80,9 +82,9 @@
 					</el-popconfirm>
 				</div>
 			</template>
-		</el-table-column>
+		</a-table-column>
 
-	</el-table>
+	</a-table>
 
 	<!-- orders pagination -->
 	<div class="mt-3"
