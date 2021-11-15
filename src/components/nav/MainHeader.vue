@@ -8,7 +8,7 @@
 	<!-- eof sidebar content -->
 	<!-- user block -->
 	<div class="flex justify-end flex-1">
-		<el-dropdown class="flex items-center flex-1 px-2 py-2 max-w-max">
+		<a-dropdown class="flex items-center flex-1 px-2 py-2 max-w-max">
 			<div class="flex items-center flex-1 w-full px-2 py-2 rounded-lg cursor-pointer bg-def_btn_dim">
 				<div>
 				<Icon
@@ -21,16 +21,16 @@
 					{{ adminUser.name }}
 				</div>
 			</div>
-			<template #dropdown>
-				<el-dropdown-menu>
-					<el-dropdown-item
+			<template #overlay>
+				<a-menu>
+					<a-menu-item
 						@click="logoutAdminClick"
 					>
 							Выйти
-					</el-dropdown-item>
-				</el-dropdown-menu>
+					</a-menu-item>
+				</a-menu>
 			</template>
-		</el-dropdown>
+		</a-dropdown>
 	</div>
 
 	<!-- eof user block -->

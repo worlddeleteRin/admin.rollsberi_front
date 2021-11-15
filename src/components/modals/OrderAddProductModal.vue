@@ -11,12 +11,12 @@
 			title="Добавление товара в заказ"
 			class="mb-3"
 		/>
-		<el-input
-			:modelValue="product_search_name"
-			@input="inputProductName"
+		<a-input
+			:value="product_search_name"
+			@change="inputProductName"
 			placeholder="Начните вводить имя товара"
 		>
-		</el-input>
+		</a-input>
 	</div>
 
 
@@ -76,8 +76,7 @@ export default defineComponent({
 		const closeModal = () => emit('close-modal')
 		const inputProductName = async (e: any) => {
 			found_products.value = null
-			console.log('e is ', e)
-			product_search_name.value = e
+			product_search_name.value = e.target.value
 			if (product_search_name.value.length > 3) {
 				await findProducts(product_search_name.value)
 			}

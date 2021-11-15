@@ -11,12 +11,12 @@
 			title="Добавление пользователя к заказу"
 			class="mb-3"
 		/>
-		<el-input
-			:modelValue="user_search_username"
-			@input="inputUserUsername"
+		<a-input
+			:value="user_search_username"
+			@change="inputUserUsername"
 			placeholder="Начните набирать логин клиента (номер телефона)..."
 		>
-		</el-input>
+		</a-input>
 	</div>
 
 
@@ -46,11 +46,11 @@
 					<div>{{ user.username }}</div>
 					<div>{{ user.name }}</div>
 				</div>
-				<el-button 
+				<a-button 
 				@click="selectUserClick(user)"
-				type="success" class="h-5">
+				type="primary" class="h-5">
 					Выбрать
-				</el-button>
+				</a-button>
 			</div>
 		</div>
 	</div>
@@ -76,7 +76,7 @@ export default defineComponent({
 		const inputUserUsername = async (e: any) => {
 			found_users.value = null
 			console.log('e is ', e)
-			user_search_username.value = e
+			user_search_username.value = e.target.value
 			if (user_search_username.value.length > 3) {
 				await findUsers(user_search_username.value)
 			}

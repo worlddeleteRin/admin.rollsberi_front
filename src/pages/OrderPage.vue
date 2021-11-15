@@ -25,18 +25,18 @@
 	<div>
 		<stage-title title="Статус заказа:" 
 		/>
-		<el-select
+		<a-select
 			v-model="update_order.status_id"
 		>
-			<el-option	
+			<a-select-option
 				v-for="status in Object.keys(order_statusses)"
 				:key="order_statusses[status].id"
 				:label="order_statusses[status].name"
 				:value="order_statusses[status].id"
 				:style="{'color': order_statusses[status].color}"
 			>
-			</el-option>
-		</el-select>
+			</a-select-option>
+		</a-select>
 	</div>
 	<!-- order status select -->
 

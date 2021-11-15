@@ -8,17 +8,18 @@
 
 	<a-table
 		:data-source="orders"
+        :pagination="false"
 	>
-		<a-table-column label="Клиент" key="customer_username" data-index="customer_id">
-			<template>
+		<a-table-column label="Клиент" key="customer_username">
+			<template #default="{ record }">
 				<div 
 				class="flex items-center tracking-wide text-black text-md"
-					v-if="customer_id"
+					v-if="record.customer_id"
 				>
 					<div class="p-2 mr-2 bg-green-400 rounded-full">
 						<Icon icon="bx:bxs-user" class="text-white"/>
 					</div>
-                        customer_username here
+                        {{ record.customer_username }}
 				</div>
 				<div
 					class="flex items-center tracking-wide text-black text-md"
@@ -27,7 +28,7 @@
 					<div class="p-2 mr-2 bg-blue-400 rounded-full">
 						<Icon icon="bx:bxs-user" class="text-white"/>
 					</div>
-                        guest_phone_number here
+                        {{ record.guest_phone_number }}
 				</div>
 			</template>
 		</a-table-column>
@@ -35,51 +36,48 @@
 		<a-table-column title="Дата" key="date_created" data-index="date_created"/>
 
 		<a-table-column title="Статус" key="status">
-			<template #bodyCell="{ record }">
+			<template #default="{ record }">
 				<div
 					class="px-3 py-1 text-white rounded-lg max-w-max"
 					:style="'background-color: ' + record?.status.color"
 				>
-                    статус тут
-                    {{ record }}
 					{{ record?.status.name_display }}
 				</div>
 			</template>
 		</a-table-column>
 
-		<a-table-column title="Сумма" key="cart?.total_amount" data-index="cart?.total_amount">
-			<template>
+		<a-table-column title="Сумма">
+			<template #default="{ record }">
 				<div class="text-xl tracking-wider text-black">
-				{{ total_amount }} &#8381; 
+				{{ record.cart?.total_amount }} &#8381; 
 				</div>
 			</template>
 		</a-table-column>
 
 		<a-table-column title="Действия">
-			<template #bodyCell="record">
+			<template #default="{ record }">
 				<div class="">
-					<el-button
+					<a-button
 						type="primary"
 						size="small"
 						@click="goOrderPage(record)"
 					>
 						<Icon icon="akar-icons:edit" width="20" />
-					</el-button>
-					<el-popconfirm
+					</a-button>
+					<a-popconfirm
 						title="Вы уверены, что хотите удалить заказ?"
-						confirmButtonText="Да"
-						cancelButtonText="Нет"
+						ok-text="Да"
+						cancel-text="Нет"
 						@confirm="deleteOrder(record)"
 					>
-						<template #reference>
-							<el-button
-								type="danger"
+							<a-button
+								type="dashed"
 								size="small"
+                                danger
 							>
 								<Icon icon="ant-design:delete-filled" width="20" />
-							</el-button>
-						</template>
-					</el-popconfirm>
+							</a-button>
+					</a-popconfirm>
 				</div>
 			</template>
 		</a-table-column>
@@ -90,29 +88,30 @@
 	<div class="mt-3"
 		v-if="orders_info.pages_count > 0"
 	>
-		<el-pagination
-			background 
-			layout="prev, pager, next"
-			v-model:current-page="orders_current_page"
-			:page-count="orders_info.pages_count"
+		<a-pagination
+			v-model:current="orders_current_page"
+			:total="orders_info.pages_count"
+            show-less-items
 		>
-		</el-pagination>
+		</a-pagination>
 	</div>
 	<!-- eof orders pagination -->
 
 	<!-- new order button -->
-	<el-button
-		@click="goCreateOrderPage"
-		:circle="true"
-		type="primary"
-		size="small"
-		class="fixed bottom-10 right-10"
-	>
-		<Icon
-			icon="akar-icons:plus"
-			width="30"
-		/>
-	</el-button>
+    <div
+        class="fixed bottom-10 right-10"
+    >
+        <a-button
+            @click="goCreateOrderPage"
+            :circle="true"
+            type="primary"
+            size="large"
+            shape="circle"
+            class="p-8"
+        >
+            +
+        </a-button>
+    </div>
 	<!-- eof new order button -->
 
 </div>
@@ -166,6 +165,7 @@ export default defineComponent({
 			router.push('/orders/new-order')
 		}
 		const deleteOrder = async (order: Record<string,any>) => {
+            console.log('order is', order)
 			const is_deleted = await store.dispatch('orders/deleteOrderAPI', order.id)
 			// success message, if deleted, error if not
 		}

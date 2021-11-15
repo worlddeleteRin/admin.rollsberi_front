@@ -8,23 +8,24 @@
 <div 
 	v-if="info_loaded"
 >
+    {{ new_order_info }}
 
 	<!-- chooise order taget -->
 	<stage-title title="Выберите, для кого создается заказ" 
 	/>
 
-	<el-select
-		v-model="new_order_info.order_target"
+	<a-select
+		v-model:value="new_order_info.order_target"
 		placeholder="Новый заказ для..."
 	>
-		<el-option
+		<a-select-option
 			v-for="order_target in order_targets"
 			:key="order_target.value"
-			:label="order_target.label"
 			:value="order_target.value"
 		>
-		</el-option>
-	</el-select>
+            {{ order_target.label }}
+		</a-select-option>
+	</a-select>
 	<!-- eof choose order target -->
 
 	<!-- select authorized user container -->
@@ -33,14 +34,14 @@
 	>
 		<stage-title title="Выберите клиента"/>
 		<!-- open select user modal button -->
-		<el-button
+		<a-button
 			v-if="authorizedUserEmpty"
 			@click="setModalState('new_order_add_user_open', true)"
 			type="primary"
 			size="medium"
 		>
 			Выбрать клиента	
-		</el-button>
+		</a-button>
 		<!-- eof open select user modal button -->
 		<!-- selected user -->
 		<div v-if="!authorizedUserEmpty"
@@ -58,7 +59,7 @@
 				<div class="px-2 py-1 bg-red-100 rounded-lg">
 					🎉 {{ new_order_info.authorized_user.bonuses }}
 				</div>
-				<div @click="setAuthorizedUser(null)">
+				<div @click="setAuthorizedUser({})">
 					<Icon icon="clarity:remove-solid" width="25"
 						class="ml-1 text-red-500 cursor-pointer"
 					/>
@@ -68,25 +69,25 @@
 		<!-- eof selected user -->
 		<!-- selected user addresses -->
 		<div v-if="!authorizedUserEmpty && new_order_info.delivery_method == 'delivery'">
-			<el-select
-				v-model="new_order_info.delivery_address"
+			<a-select
+				v-model:value="new_order_info.delivery_address"
 				placeholder="Выберите адрес доставки"
 			>
-				<el-option
+				<a-select-option
 					v-for="address in user_delivery_addresses"
 					:key="address.id"
-					:label="address.address_display"
 					:value="address.id"
 				>
-				</el-option>
-			</el-select>
-				<el-button
+                    {{ address.address_display }}
+				</a-select-option>
+			</a-select>
+				<a-button
 					@click="setModalState('add_user_delivery_address_open', true)"
 					type="primary"
 					class="ml-2"
 				>
 					Добавить новый адрес
-				</el-button>
+				</a-button>
 		</div>
 		<!-- eof selected user addresses -->
 	</div>
@@ -95,54 +96,54 @@
 	<!-- choose delivery method -->
 	<div>
 	<stage-title title="Выберите способ доставки"/>
-		<el-select
-			v-model="new_order_info.delivery_method"
+		<a-select
+			v-model:value="new_order_info.delivery_method"
 			placeholder="Выберите способ доставки"
 		>
-			<el-option
+			<a-select-option
 				v-for="delivery_method in checkout_common_info.delivery_methods"
 				:key="delivery_method.id"
-				:label="delivery_method.name"
 				:value="delivery_method.id"
 			>
-			</el-option>
-		</el-select>				
+                {{ delivery_method.name }}
+			</a-select-option>
+		</a-select>				
 	</div>
 	<!-- eof choose delivery method -->
 
 	<!-- choose payment method -->
 	<div>
 	<stage-title title="Выберите способ оплаты"/>
-		<el-select
-			v-model="new_order_info.payment_method"
+		<a-select
+			v-model:value="new_order_info.payment_method"
 			placeholder="Выберите способ оплаты"
 		>
-			<el-option
+			<a-select-option
 				v-for="payment_method in checkout_common_info.payment_methods"
 				:key="payment_method.id"
-				:label="payment_method.name"
 				:value="payment_method.id"
 			>
-			</el-option>
-		</el-select>				
+                {{ payment_method.name }}
+			</a-select-option>
+		</a-select>				
 	</div>
 	<!-- eof choose payment method -->
 
 	<!-- choose pickup address -->
 	<div v-if="new_order_info.delivery_method == 'pickup'">
 	<stage-title title="Выберите пункт выдачи заказа"/>
-		<el-select
-			v-model="new_order_info.pickup_address"
+		<a-select
+			v-model:value="new_order_info.pickup_address"
 			placeholder="Выберите пункт выдачи заказа"
 		>
-			<el-option
+			<a-select-option
 				v-for="pickup_address in checkout_common_info.pickup_addresses"
 				:key="pickup_address.id"
-				:label="pickup_address.name"
 				:value="pickup_address.id"
 			>
-			</el-option>
-		</el-select>				
+                {{ pickup_address.name }}
+			</a-select-option>
+		</a-select>				
 	</div>
 	<!-- eof choose pickup address -->
 
@@ -150,24 +151,24 @@
 	<div v-if="new_order_info.order_target == 'guest_user'">
 	<!-- need to add v-mask -->
 		<stage-title title="Введите номер телефона клиента"/>
-		<el-input
+		<a-input
 			placeholder="Номер телефона клиента"
-			v-model="new_order_info.guest_phone_number"
+			v-model:value="new_order_info.guest_phone_number"
 			v-maska="phone_mask"
 			@maska="setGuestUserPhone"
 		>
-		</el-input>
+		</a-input>
 	</div>
 	<!-- eof guest user phone -->
 
 	<!-- guest delivery address -->
 	<div v-if="new_order_info.order_target == 'guest_user' && new_order_info.delivery_method == 'delivery'">
 		<stage-title title="Введите адрес доставки"/>
-		<el-input
+		<a-input
 			placeholder="Напишите адрес доставки"
-			v-model="new_order_info.guest_delivery_address"
+			v-model:value="new_order_info.guest_delivery_address"
 		>
-		</el-input>
+		</a-input>
 	</div>
 	<!-- eof guest delivery_address -->
 
@@ -175,13 +176,13 @@
 	<div 
 	class="">
 		<stage-title title="Добавьте товары в заказ"/>
-		<el-button
+		<a-button
 			@click="setModalState('new_order_add_product_open', true)"
 			type="primary"
 			size="medium"
 		>
 			Добавить товар в заказ
-		</el-button>
+		</a-button>
 		<!-- order items -->
 		<div v-if="cart">	
 			<div
@@ -220,13 +221,13 @@
 
 	<!-- create order button -->
 	<div class="mt-3">
-		<el-button
+		<a-button
 			:disabled="!check_can_create_order"
 			@click="createOrder"
 			type="success"
 		>
 			Создать заказ
-		</el-button>
+		</a-button>
 	</div>
 	<!-- eof create order button -->
 
@@ -295,13 +296,13 @@ export default defineComponent({
 		const new_order_info = reactive({
 			authorized_user: {} as Record<string,any>,
 			delivery_address: null as unknown,
-			order_target: '',
+			order_target: null,
 			guest_phone_number: '',
 			guest_phone_number_raw: '',
 			guest_delivery_address: '',
-			delivery_method: '',
-			payment_method: '',
-			pickup_address: ''
+			delivery_method: null,
+			payment_method: null,
+			pickup_address: null,
 		})
 		// new order items 
 
@@ -361,7 +362,7 @@ export default defineComponent({
 		// set authorized user to order
 		const setAuthorizedUser = async (user: Record<string,any>) =>  {
 			new_order_info.authorized_user = user
-			if (new_order_info.authorized_user) {
+			if (new_order_info.authorized_user && Object.keys(new_order_info.authorized_user).length > 0) {
 				const delivery_addresses = await store.dispatch('users/getUserAddressesAPI', user.id)
 				if (!delivery_addresses) { return false;}
 				user_delivery_addresses.value = delivery_addresses
