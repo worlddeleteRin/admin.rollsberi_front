@@ -26,15 +26,15 @@
 		<stage-title title="Статус заказа:" 
 		/>
 		<a-select
-			v-model="update_order.status_id"
+			v-model:value="update_order.status_id"
 		>
 			<a-select-option
 				v-for="status in Object.keys(order_statusses)"
 				:key="order_statusses[status].id"
-				:label="order_statusses[status].name"
 				:value="order_statusses[status].id"
 				:style="{'color': order_statusses[status].color}"
 			>
+                {{ order_statusses[status].name }}
 			</a-select-option>
 		</a-select>
 	</div>
@@ -95,29 +95,35 @@
 	
 	<!-- order content -->
 	<div>
+
 		<stage-title title="Состав заказа:" 
 		/>
-		<el-table
-			:data="order.line_items"
+
+		<a-table
+			:data-source="order?.cart?.line_items"
 		>
-			<el-table-column label="Изображение">
-				<template #default="scope">
-					<img :src="scope.row.product.imgsrc[0]"
+			<a-table-column title="Изображение" key="product.imgsrc[0]">
+				<template #default="{ record }">
+					<img :src="record.product.imgsrc[0]"
 						class="w-20"
 					/>
 				</template>
-			</el-table-column>
-			<el-table-column
-				prop="product.name"
-				label="Название"
-				>
-			</el-table-column>
-			<el-table-column
-				prop="quantity"
-				label="Кол-во"
-				>
-			</el-table-column>
-		</el-table>
+			</a-table-column>
+			<a-table-column
+                key="product.id"
+				data-index="product"
+				title="Название"
+			>
+                <template #default="{ record }">
+                    {{ record.product.name }}
+                </template>
+            </a-table-column>
+			<a-table-column
+				data-index="quantity"
+				title="Кол-во"
+                key="quantity"
+			/>
+		</a-table>
 	</div>
 	<!-- eof order content -->
 
@@ -154,17 +160,17 @@
 
 	<!-- save order -->
 	<div class="mt-4">
-		<el-button
+		<a-button
 			@click="updateOrder"
-			type="success"	
+			type="primary"	
 		>
 			Сохранить	
-		</el-button>
-		<el-button
+		</a-button>
+		<a-button
 			@click="goOrdersPage"
 		>
 			Назад	
-		</el-button>
+		</a-button>
 	</div>
 	<!-- eof save order -->
 </div>
@@ -177,7 +183,6 @@
 <!-- eof order not loaded block -->
 
 </div>
-
 </template>
 
 <script lang="ts">

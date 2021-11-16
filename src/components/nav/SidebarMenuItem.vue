@@ -5,9 +5,9 @@ class="flex items-center justify-start px-3 py-2 mx-auto rounded-lg cursor-point
 	<Icon
 		:icon="icon"
 		width="20"
-		class="text-black group-hover:text-blue-700"
+		class="text-white group-hover:text-black"
 	/>
-	<div class="ml-2 tracking-wide group-hover:text-blue-800">
+	<div class="text-white ml-2 tracking-wide group-hover:text-black select-none">
 		{{ title }}
 	</div>
 </div>

@@ -3,7 +3,7 @@
 
 	<!-- sidebar content -->
 	<div class="px-2 py-4">
-		some header is here
+	    Панель управления	
 	</div>
 	<!-- eof sidebar content -->
 	<!-- user block -->

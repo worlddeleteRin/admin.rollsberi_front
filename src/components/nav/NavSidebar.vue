@@ -1,14 +1,17 @@
 <template>
-<div class="bg-white text-black max-w-[200px] w-full flex flex-col flex-shrink-0 h-screen shadow-xl">
 
+<a-menu
+    mode="inline"
+    theme="dark"
+>
 	<!-- sidebar content -->
 	<div class="px-2 py-4">
 
 		<router-link
 			:to="'/'"
-			class="text-xl font-semibold tracking-wider"
+			class="text-xl font-semibold tracking-wider text-white"
 		>
-			Rollsberi
+			Rollsberi Admin
 		</router-link>
 	
 		<div class="mt-3">
@@ -24,7 +27,7 @@
 	</div>
 	<!-- eof sidebar content -->
 
-</div>
+</a-menu>
 
 </template>
 

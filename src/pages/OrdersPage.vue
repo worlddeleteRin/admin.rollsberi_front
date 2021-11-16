@@ -10,7 +10,7 @@
 		:data-source="orders"
         :pagination="false"
 	>
-		<a-table-column label="Клиент" key="customer_username">
+		<a-table-column title="Клиент" key="customer_username">
 			<template #default="{ record }">
 				<div 
 				class="flex items-center tracking-wide text-black text-md"
@@ -59,10 +59,11 @@
 				<div class="">
 					<a-button
 						type="primary"
-						size="small"
+						size="medium"
+                        shape="circle"
 						@click="goOrderPage(record)"
 					>
-						<Icon icon="akar-icons:edit" width="20" />
+						<Icon icon="akar-icons:edit" class="w-full text-lg" />
 					</a-button>
 					<a-popconfirm
 						title="Вы уверены, что хотите удалить заказ?"
@@ -72,10 +73,14 @@
 					>
 							<a-button
 								type="dashed"
-								size="small"
+								size="medium"
+                                shape="circle"
                                 danger
+                                class="ml-1"
 							>
-								<Icon icon="ant-design:delete-filled" width="20" />
+								<Icon icon="ant-design:delete-filled"
+                                class="w-full text-lg"
+                                />
 							</a-button>
 					</a-popconfirm>
 				</div>
@@ -109,7 +114,10 @@
             shape="circle"
             class="p-8"
         >
-            +
+            <Icon
+                icon="akar-icons:plus"
+                class="w-full text-2xl"
+            />
         </a-button>
     </div>
 	<!-- eof new order button -->

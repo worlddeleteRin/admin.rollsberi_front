@@ -8,9 +8,10 @@
 	>
 
 	<NavSidebar
+        class="max-w-[256px] fixed top-0 left-0 h-full"
 	/>
 
-	<div class="flex flex-col w-full h-full">
+	<div class="flex flex-col w-full h-full ml-[260px]">
 
 	<MainHeader
 		:adminUser="admin_user"
@@ -21,6 +22,9 @@
 		<router-view>
 		</router-view>
 	</div>
+
+
+    {{ access_token }}
 
 	</div>
 
@@ -39,7 +43,6 @@
 	Загрузка...
 </div>
 
-{{ access_token }}
 
 </template>
 
