@@ -6,44 +6,45 @@
 		<div>{{ item.product.name }}</div>
 		<div>
 			Цена: <strong>{{ item.product.price }},</strong>
-			Цена по скидке: <strong>{{ item.product.sale_price ? item.produce.sale_price : '--' }}</strong>
+			Цена по скидке: <strong>{{ item.product.sale_price ? item.product.sale_price : '--' }}</strong>
 		</div>
 		<div>{{ item.product.description }}</div>
 	</div>
 	<div class="flex justify-end flex-1">
 	<div class="flex items-center">
-		<el-button
+		<a-button
 			type="primary"
-			size="small"
-			:circle="true"
+            size="small"
+			shape="round"
 			@click="deleteItemQuantity"
 			class=""
 		>
 			<Icon
 				icon="akar-icons:minus"
 			/>
-		</el-button>
+		</a-button>
 		<div class="mx-3">{{ item.quantity }}</div>
-		<el-button
+		<a-button
 			type="primary"
 			size="small"
-			:circle="true"
+			shape="round"
 			@click="addItemQuantity"
 			class=""
 		>
 			<Icon
 				icon="akar-icons:plus"
 			/>
-		</el-button>
+		</a-button>
 	</div>
 	<div class="ml-4">
-		<el-button
-			type="danger"
+		<a-button
+			type="primary"
+            shape="round"
 			size="medium"
 			@click="removeItem"
-		>
+		danger>
 			Убрать
-		</el-button>
+		</a-button>
 	</div>
 	</div>
 </div>

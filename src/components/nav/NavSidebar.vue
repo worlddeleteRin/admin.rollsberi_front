@@ -5,7 +5,7 @@
     theme="dark"
 >
 	<!-- sidebar content -->
-	<div class="px-2 py-4">
+	<div class="px-2 py-4 fixed">
 
 		<router-link
 			:to="'/'"

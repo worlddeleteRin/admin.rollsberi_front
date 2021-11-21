@@ -59,13 +59,21 @@ const actions = {
 		context: ActionContext<any,any>, 
 		{order_id, update_order} : {order_id: string, update_order: Record<string,any>}
 	) {
+        const resp_info = {
+            success: true,
+            msg: ''
+        }
 		const access_token = context.rootState.authorization.access_token
-		const resp_data: Record<string,any> = await OrdersDataService.updateOrder(access_token, order_id, update_order)
-		if (!resp_data) { return false; }
-		if (!(resp_data.status == 200)) { return false; }
-		context.commit('setCurrentOrder', resp_data.data)
+		const resp: Record<string,any> = await OrdersDataService.updateOrder(access_token, order_id, update_order)
+		if (!(resp.status == 200)) { 
+            console.log('error, resp is', resp)
+            resp_info.success = false
+            resp_info.msg = resp.data.detail
+            return resp_info
+        }
+		context.commit('setCurrentOrder', resp.data)
 		await context.dispatch('getOrdersAPI')
-		return true
+		return resp_info
 	},
 
 }

@@ -9,7 +9,7 @@ import './main.css'
 // import ElementPlus from 'element-plus';
 import {
     Table, Popconfirm, Button, Pagination, Dropdown,
-    Menu, Select, Input
+    Menu, Select, Input, Layout
 } from "ant-design-vue"
 // import 'element-plus/dist/index.css';
 import "ant-design-vue/dist/antd.css";
@@ -32,11 +32,14 @@ app.use(Dropdown)
 app.use(Menu)
 app.use(Select)
 app.use(Input)
+app.use(Layout)
 
 app.use(store)
 app.use(router)
 // app.use(ElementPlus)
 app.use(Maska)
+
+
 
 
 // app global components

@@ -18,7 +18,7 @@
 				/>
 				</div>
 				<div class="ml-1 text-def_btn_text">
-					{{ adminUser.name }}
+					{{ adminUser?.name }}
 				</div>
 			</div>
 			<template #overlay>

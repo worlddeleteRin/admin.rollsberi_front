@@ -9,8 +9,8 @@ class OrdersDataServiceClass {
 				},
 				params: {...options},
 			}
-			).catch(() => {
-				return response
+			).catch((error) => {
+				return error.response
 			});
 		return response
 	};
@@ -22,8 +22,8 @@ class OrdersDataServiceClass {
 					"Authorization": `Bearer ${user_access_token}`
 				},
 			}
-			).catch(() => {
-				return response
+			).catch((error) => {
+				return error.response
 			});
 		return response
 	};
@@ -35,8 +35,8 @@ class OrdersDataServiceClass {
 					"Authorization": `Bearer ${user_access_token}`
 				},
 			}
-			).catch(() => {
-				return response
+			).catch((error) => {
+				return error.response
 			});
 		return response
 	};
@@ -49,8 +49,8 @@ class OrdersDataServiceClass {
 					"Authorization": `Bearer ${user_access_token}`
 				},
 			}
-			).catch(() => {
-				return response
+			).catch((error) => {
+				return error.response
 			});
 		return response
 	};

@@ -60,7 +60,7 @@
 		<stage-title title="Адрес доставки" 
 		/>
 		<div>
-			{{order.customer_id ? order.delivery_address.address_display : order.guest_delivery_address}}
+			{{order.customer_id ? order.delivery_address?.address_display : order?.guest_delivery_address}}
 		</div>
 	</div>
 	<!-- eof delivery address -->
@@ -190,6 +190,8 @@ import { defineComponent, onBeforeMount, onMounted, computed, ref, reactive } fr
 import { useStore } from 'vuex';
 import { useRoute, useRouter } from 'vue-router';
 
+import { message } from 'ant-design-vue'
+
 export default defineComponent({
 	name: "OrderPage",
 	setup (props, {emit}) {
@@ -218,11 +220,12 @@ export default defineComponent({
 			return
 		});
 		const updateOrder = async () => {
-			const order_updated: boolean = await store.dispatch("orders/updateOrderAPI", 
+			const resp: Record<string,any> = await store.dispatch("orders/updateOrderAPI", 
 			{update_order: update_order, order_id: order.value.id})
-			if (order_updated) {
+			if (resp?.success) {
 				return router.push("/orders")
 			}
+            message.error(resp.msg)
 		}
 		const goOrdersPage = () => router.push("/orders")
 

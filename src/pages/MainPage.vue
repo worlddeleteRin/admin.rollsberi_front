@@ -1,7 +1,6 @@
 <template>
 <div>
-	main page is here
-	common info is {{ common_info }}
+    Здесь скоро будет статистика
 </div>
 </template>
 

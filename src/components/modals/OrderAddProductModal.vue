@@ -41,17 +41,24 @@
 			:key="product.id"
 			class="px-4 py-2 mx-4 mx-auto my-2 rounded-md bg-green-50"
 		>
-			<div class="flex items-center">
-				<img :src="product.imgsrc[0]" class="object-contain w-20" />
-				<div class="flex flex-col ml-3">
-					<div>{{ product.name }}</div>
-					<div>{{ product.description }}</div>
-				</div>
-				<el-button 
-				@click="addItemClick(product)"
-				type="success" class="h-5">
-					Выбрать
-				</el-button>
+			<div class="flex justify-between items-center">
+                <div class="flex items-center">
+                    <img :src="product.imgsrc[0]" class="object-contain w-20" />
+                    <div class="flex flex-col ml-3">
+                        <div>{{ product.name }}</div>
+                        <div>{{ product.description }}</div>
+                    </div>
+                </div>
+                <div>
+                    <a-button 
+                        @click="addItemClick(product)"
+                        type="primary" 
+                        shape="round"
+                        ghost
+                        >
+                            Выбрать
+                    </a-button>
+                </div>
 			</div>
 		</div>
 	</div>
@@ -63,6 +70,8 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import { useStore } from 'vuex';
+
+import { message } from 'ant-design-vue';
 
 export default defineComponent({
 	name: "OrderAddProductModal",
@@ -86,6 +95,7 @@ export default defineComponent({
 		}
 		const addItemClick = async (product: Record<string,any>) => {
 			store.dispatch('cart/addLineItemAPI', {product: product})
+            message.success('Товар добавлен в корзину')
 		}
 		return {
 			// refs

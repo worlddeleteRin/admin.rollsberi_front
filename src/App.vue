@@ -3,30 +3,28 @@
 	v-if="initial_loaded"
 >
 
-	<div class="flex"
+	<div class=""
 		v-if="is_authorized"
 	>
 
-	<NavSidebar
-        class="max-w-[256px] fixed top-0 left-0 h-full"
-	/>
-
-	<div class="flex flex-col w-full h-full ml-[260px]">
-
-	<MainHeader
-		:adminUser="admin_user"
-		@logout="logoutAdmin"
-	/>
-
-	<div class="px-4 my-5">
-		<router-view>
-		</router-view>
-	</div>
-
-
-    {{ access_token }}
-
-	</div>
+    <a-layout>
+    <a-layout-sider v-model:collapsed="sidebar_collapsed" :trigger="null" collapsible>
+      <div class="logo" />
+        <NavSidebar />
+    </a-layout-sider>
+    <a-layout>
+        <MainHeader
+            :adminUser="admin_user"
+            @logout="logoutAdmin"
+        />
+      <div
+      class="my-6 mx-4 p-6 bg-white min-h-[300px] rounded-md"
+      >
+        <router-view>
+        </router-view>
+      </div>
+    </a-layout>
+  </a-layout>
 
 	</div>
 
@@ -66,6 +64,7 @@ export default defineComponent({
 		const store = useStore()
 		// ref
 		const initial_loaded = ref(false)
+        const sidebar_collapsed = ref(false)
 		// computed
 		const access_token = computed(() => store.state.authorization.access_token);
 		const admin_user = computed(() => store.state.authorization.admin_user);
@@ -91,6 +90,7 @@ export default defineComponent({
 		return {
 			// ref
 			initial_loaded,
+            sidebar_collapsed,
 			// computed
 			access_token,
 			admin_user,

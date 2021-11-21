@@ -95,8 +95,7 @@
 	>
 		<a-pagination
 			v-model:current="orders_current_page"
-			:total="orders_info.pages_count"
-            show-less-items
+			:total="orders_info.pages_count * 10"
 		>
 		</a-pagination>
 	</div>
@@ -108,15 +107,14 @@
     >
         <a-button
             @click="goCreateOrderPage"
-            :circle="true"
             type="primary"
             size="large"
             shape="circle"
-            class="p-8"
+            class=""
         >
             <Icon
                 icon="akar-icons:plus"
-                class="w-full text-2xl"
+                class="w-full h-full text-2xl px-2"
             />
         </a-button>
     </div>
